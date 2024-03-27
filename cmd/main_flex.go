@@ -11,15 +11,22 @@ type MainFlex struct {
 	guildsTree   *GuildsTree
 	messagesText *MessagesText
 	messageInput *MessageInput
+	userList     *UserList
+
+	guildsTreeVisible bool
+	userListVisible   bool
 }
 
 func newMainFlex() *MainFlex {
 	mf := &MainFlex{
 		Flex: tview.NewFlex(),
 
-		guildsTree:   newGuildsTree(),
-		messagesText: newMessagesText(),
-		messageInput: newMessageInput(),
+		guildsTree:        newGuildsTree(),
+		guildsTreeVisible: true,
+		messagesText:      newMessagesText(),
+		messageInput:      newMessageInput(),
+		userList:          newUserList(),
+		userListVisible:   true,
 	}
 
 	mf.init()
@@ -29,6 +36,9 @@ func newMainFlex() *MainFlex {
 
 func (mf *MainFlex) init() {
 	mf.Clear()
+	if mf.guildsTreeVisible {
+		mf.AddItem(mf.guildsTree, 0, 1, true)
+	}
 
 	right := tview.NewFlex()
 	right.SetDirection(tview.FlexRow)
@@ -37,6 +47,10 @@ func (mf *MainFlex) init() {
 	// The guilds tree is always focused first at start-up.
 	mf.AddItem(mf.guildsTree, 0, 1, true)
 	mf.AddItem(right, 0, 4, false)
+
+	if mf.userListVisible {
+		mf.AddItem(mf.userList, 0, 1, false)
+	}
 }
 
 func (mf *MainFlex) onInputCapture(event *tcell.EventKey) *tcell.EventKey {
@@ -60,10 +74,9 @@ func (mf *MainFlex) onInputCapture(event *tcell.EventKey) *tcell.EventKey {
 		} else {
 			mf.init()
 			app.SetFocus(mf.guildsTree)
+			return nil
 		}
-
-		return nil
 	}
 
-	return event
+	return nil
 }
