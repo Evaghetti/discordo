@@ -36,6 +36,7 @@ func newMainFlex() *MainFlex {
 
 func (mf *MainFlex) init() {
 	mf.Clear()
+
 	if mf.guildsTreeVisible {
 		mf.AddItem(mf.guildsTree, 0, 1, true)
 	}
@@ -64,6 +65,11 @@ func (mf *MainFlex) onInputCapture(event *tcell.EventKey) *tcell.EventKey {
 	case cfg.Keys.FocusMessageInput:
 		app.SetFocus(mf.messageInput)
 		return nil
+	case cfg.Keys.FocusUserList:
+		if mf.userListVisible {
+			app.SetFocus(mf.userList)
+		}
+		return nil
 	case cfg.Keys.ToggleGuildsTree:
 		// The guilds tree is visible if the numbers of items is two.
 		if mf.GetItemCount() == 2 {
@@ -76,6 +82,20 @@ func (mf *MainFlex) onInputCapture(event *tcell.EventKey) *tcell.EventKey {
 			app.SetFocus(mf.guildsTree)
 			return nil
 		}
+	case cfg.Keys.ToggleUserList:
+		// The user list is visible if the state boolean says so
+		if mf.userListVisible {
+			mf.RemoveItem(mf.userList)
+			if mf.userList.HasFocus() {
+				app.SetFocus(mf)
+			}
+			mf.userListVisible = false
+		} else {
+			mf.userListVisible = true
+			mf.init()
+			app.SetFocus(mf.userList)
+		}
+		return nil
 	}
 
 	return nil

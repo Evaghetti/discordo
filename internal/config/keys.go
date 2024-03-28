@@ -5,7 +5,9 @@ type (
 		FocusGuildsTree   string `toml:"focus_guilds_tree"`
 		FocusMessagesText string `toml:"focus_messages_text"`
 		FocusMessageInput string `toml:"focus_message_input"`
+		FocusUserList     string `toml:"focus_user_list"`
 		ToggleGuildsTree  string `toml:"toggle_guild_tree"`
+		ToggleUserList    string `toml:"toggle_user_list"`
 
 		SelectPrevious string `toml:"select_previous"`
 		SelectNext     string `toml:"select_next"`
@@ -35,6 +37,14 @@ type (
 		Send   string `toml:"send"`
 		Editor string `toml:"editor"`
 		Cancel string `toml:"cancel"`
+	}
+
+	UserListKeys struct {
+		SelectCurrent  string `toml:"select_current"`
+		SelectPrevious string `toml:"select_previous"`
+		SelectNext     string `toml:"select_next"`
+		SelectFirst    string `toml:"select_first"`
+		SelectLast     string `toml:"select_last"`
 	}
 )
 
