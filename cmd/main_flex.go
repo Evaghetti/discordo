@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"log"
+
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
@@ -22,11 +24,11 @@ func newMainFlex() *MainFlex {
 		Flex: tview.NewFlex(),
 
 		guildsTree:        newGuildsTree(),
-		guildsTreeVisible: true,
 		messagesText:      newMessagesText(),
 		messageInput:      newMessageInput(),
 		userList:          newUserList(),
 		userListVisible:   true,
+		guildsTreeVisible: true,
 	}
 
 	mf.init()
@@ -37,24 +39,22 @@ func newMainFlex() *MainFlex {
 func (mf *MainFlex) init() {
 	mf.Clear()
 
-	if mf.guildsTreeVisible {
-		mf.AddItem(mf.guildsTree, 0, 1, true)
-	}
-
-	right := tview.NewFlex()
-	right.SetDirection(tview.FlexRow)
-	right.AddItem(mf.messagesText, 0, 1, false)
-	right.AddItem(mf.messageInput, 3, 1, false)
+	chat := tview.NewFlex()
+	chat.SetDirection(tview.FlexRow)
+	chat.AddItem(mf.messagesText, 0, 1, false)
+	chat.AddItem(mf.messageInput, 3, 1, false)
 	// The guilds tree is always focused first at start-up.
-	mf.AddItem(mf.guildsTree, 0, 1, true)
-	mf.AddItem(right, 0, 4, false)
-
+	if mf.guildsTreeVisible {
+		mf.AddItem(mf.guildsTree, 0, 1, mf.guildsTreeVisible)
+	}
+	mf.AddItem(chat, 0, 4, false)
 	if mf.userListVisible {
-		mf.AddItem(mf.userList, 0, 1, false)
+		mf.AddItem(mf.userList, 0, 1, mf.userListVisible)
 	}
 }
 
 func (mf *MainFlex) onInputCapture(event *tcell.EventKey) *tcell.EventKey {
+	log.Println(event.Name())
 	switch event.Name() {
 	case cfg.Keys.FocusGuildsTree:
 		app.SetFocus(mf.guildsTree)
@@ -66,18 +66,18 @@ func (mf *MainFlex) onInputCapture(event *tcell.EventKey) *tcell.EventKey {
 		app.SetFocus(mf.messageInput)
 		return nil
 	case cfg.Keys.FocusUserList:
-		if mf.userListVisible {
-			app.SetFocus(mf.userList)
-		}
+		app.SetFocus(mf.userList)
 		return nil
 	case cfg.Keys.ToggleGuildsTree:
 		// The guilds tree is visible if the numbers of items is two.
-		if mf.GetItemCount() == 2 {
+		if mf.guildsTreeVisible {
 			mf.RemoveItem(mf.guildsTree)
 			if mf.guildsTree.HasFocus() {
 				app.SetFocus(mf)
 			}
+			mf.guildsTreeVisible = false
 		} else {
+			mf.guildsTreeVisible = true
 			mf.init()
 			app.SetFocus(mf.guildsTree)
 			return nil
@@ -94,9 +94,9 @@ func (mf *MainFlex) onInputCapture(event *tcell.EventKey) *tcell.EventKey {
 			mf.userListVisible = true
 			mf.init()
 			app.SetFocus(mf.userList)
+			return nil
 		}
-		return nil
 	}
 
-	return nil
+	return event
 }

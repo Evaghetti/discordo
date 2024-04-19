@@ -223,17 +223,23 @@ func (gt *GuildsTree) onSelected(n *tview.TreeNode) {
 }
 
 func (gt *GuildsTree) onInputCapture(event *tcell.EventKey) *tcell.EventKey {
+	log.Println(event.Name())
 	switch event.Name() {
 	case cfg.Keys.SelectPrevious:
+		log.Println("1")
 		return tcell.NewEventKey(tcell.KeyUp, 0, tcell.ModNone)
 	case cfg.Keys.SelectNext:
+		log.Println("2")
 		return tcell.NewEventKey(tcell.KeyDown, 0, tcell.ModNone)
 	case cfg.Keys.SelectFirst:
+		log.Println("3")
 		return tcell.NewEventKey(tcell.KeyHome, 0, tcell.ModNone)
 	case cfg.Keys.SelectLast:
+		log.Println("4")
 		return tcell.NewEventKey(tcell.KeyEnd, 0, tcell.ModNone)
 
 	case cfg.Keys.GuildsTree.SelectCurrent:
+		log.Println("5")
 		return tcell.NewEventKey(tcell.KeyEnter, 0, tcell.ModNone)
 	}
 
