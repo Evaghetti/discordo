@@ -5,7 +5,9 @@ type (
 		FocusGuildsTree   string `toml:"focus_guilds_tree"`
 		FocusMessagesText string `toml:"focus_messages_text"`
 		FocusMessageInput string `toml:"focus_message_input"`
+		FocusUserList     string `toml:"focus_user_list"`
 		ToggleGuildsTree  string `toml:"toggle_guild_tree"`
+		ToggleUserList    string `toml:"toggle_user_list"`
 
 		SelectPrevious string `toml:"select_previous"`
 		SelectNext     string `toml:"select_next"`
@@ -15,6 +17,7 @@ type (
 		GuildsTree   GuildsTreeKeys   `toml:"guilds_tree"`
 		MessagesText MessagesTextKeys `toml:"messages_text"`
 		MessageInput MessageInputKeys `toml:"message_input"`
+		UserList     GuildsTreeKeys   `toml:"user_list"`
 	}
 
 	GuildsTreeKeys struct {
@@ -43,7 +46,9 @@ func defaultKeys() Keys {
 		FocusGuildsTree:   "Ctrl+G",
 		FocusMessagesText: "Ctrl+T",
 		FocusMessageInput: "Ctrl+P",
+		FocusUserList:     "Ctrl+O",
 		ToggleGuildsTree:  "Ctrl+B",
+		ToggleUserList:    "Ctrl+U",
 
 		SelectPrevious: "Rune[k]",
 		SelectNext:     "Rune[j]",
@@ -51,6 +56,10 @@ func defaultKeys() Keys {
 		SelectLast:     "Rune[G]",
 
 		GuildsTree: GuildsTreeKeys{
+			SelectCurrent: "Enter",
+		},
+
+		UserList: GuildsTreeKeys{
 			SelectCurrent: "Enter",
 		},
 
